@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import useForm from '../../hooks/form.js';
+import { SettingsContext } from '../../context/settings.js';
 
 import { v4 as uuid } from 'uuid';
 
@@ -10,7 +11,11 @@ const ToDo = () => {
   });
   const [list, setList] = useState([]);
   const [incomplete, setIncomplete] = useState([]);
+  const [currentIndex, setCurrentIndex] = useState(0);
   const { handleChange, handleSubmit } = useForm(addItem, defaultValues);
+  const contextValues = useContext(SettingsContext);
+  const [getInput, setGetInput] = useState(contextValues.pagination);
+  console.log(contextValues);
 
   function addItem(item) {
     item.id = uuid();
@@ -43,6 +48,19 @@ const ToDo = () => {
     document.title = `To Do List: ${incomplete}`;
   }, [list]);
 
+  const paginate = () => {
+    // list -> total items to display
+
+    // return a sub array, starting from current Index, going to current Index + Pagination.
+    return list.slice(currentIndex, currentIndex + contextValues.pagination); // aren't we adding!
+  }
+  const next = () => {
+    setCurrentIndex(currentIndex + contextValues.pagination);
+  }
+  const previous = () => {
+    setCurrentIndex(currentIndex - contextValues.pagination);
+  }
+
   return (
     <>
       <header>
@@ -73,7 +91,8 @@ const ToDo = () => {
         </label>
       </form>
 
-      {list.map(item => (
+      {/* We only want the number of items displayed as specified by pagination */}
+      {paginate().map(item => (
         <div key={item.id}>
           <p>{item.text}</p>
           <p><small>Assigned to: {item.assignee}</small></p>
@@ -82,7 +101,17 @@ const ToDo = () => {
           <hr />
         </div>
       ))}
+      {/* Add some buttons for moving our pagination values */}
+      <button onClick={previous}>Previous</button>
+      <button onClick={next}>Next</button>
 
+      <form onSubmit={(e) => {
+        e.preventDefault();
+        contextValues.updatePagination(e.target.paginationValue.value);
+      }}>
+        <input type='number' name="paginationValue"/>
+        <button type="submit">Update Pagination</button>
+      </form>
     </>
   );
 };

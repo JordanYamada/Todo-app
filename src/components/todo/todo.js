@@ -32,7 +32,7 @@ const ToDo = () => {
   function toggleComplete(id) {
 
     const items = list.map( item => {
-      if ( item.id == id ) {
+      if ( item.id === id ) {
         item.complete = ! item.complete;
       }
       return item;
@@ -97,6 +97,7 @@ const ToDo = () => {
           <p>{item.text}</p>
           <p><small>Assigned to: {item.assignee}</small></p>
           <p><small>Difficulty: {item.difficulty}</small></p>
+          <button onClick={() => deleteItem(item.id)}>Delete Item</button>
           <div onClick={() => toggleComplete(item.id)}>Complete: {item.complete.toString()}</div>
           <hr />
         </div>

@@ -27,6 +27,12 @@ function SettingsProvider(props) { // we need this, app tells us what children w
   useEffect(() => {
     let savedSettings = localStorage.getItem('settings');
     // set them back into context values.
+    let storedSettings = JSON.parse(savedSettings);
+    if (storedSettings) {
+      setPagination(storedSettings.pagination);
+      setSort(storedSettings.sort);
+      setDisplay(storedSettings.display);
+    }
   }, []);
 
   return (

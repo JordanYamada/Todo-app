@@ -14,8 +14,7 @@ const ToDo = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const { handleChange, handleSubmit } = useForm(addItem, defaultValues);
   const contextValues = useContext(SettingsContext);
-  const [getInput, setGetInput] = useState(contextValues.pagination);
-  console.log(contextValues);
+  // const [getInput, setGetInput] = useState(contextValues.pagination);
 
   function addItem(item) {
     item.id = uuid();

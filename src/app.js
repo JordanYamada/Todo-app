@@ -1,16 +1,16 @@
 import React from 'react';
-import LoginProvider from './auth/context.js';
+import AuthProvider from './auth/Auth.js';
 import ToDo from './components/todo/todo.js';
 import SettingsProvider from './context/settings.js';
 
 export default class App extends React.Component {
   render() {
     return (
-      <LoginProvider>
+      <AuthProvider>
         <SettingsProvider>
           <ToDo />
         </SettingsProvider>
-      </LoginProvider>
+      </AuthProvider>
     );
   }
 }

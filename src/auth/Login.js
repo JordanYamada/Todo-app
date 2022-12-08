@@ -1,57 +1,33 @@
-import React from 'react';
-import {When} from 'react-if';
+import { useState, useContext } from 'react';
+import { AuthContext } from './Auth.js';
+import { When } from 'react-if';
 
-import { LoginContext } from './context.js';
+function Login() {
 
-class Login extends React.Component {
-  static contextType = LoginContext;
+  let context = useContext(AuthContext);
+  let [username, setUsername] = useState('');
+  let [password, setPassword] = useState('');
 
-  constructor(props) {
-    super(props);
-    this.state = { username: '', password: '' };
-    this.handleSuccess = this.handleSuccess.bind(this);
-  }
-
-  handleChange = e => {
-    this.setState({ [e.target.name]: e.target.value });
-  };
-
-  handleSubmit = e => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    this.context.login(this.state.username, this.state.password,this.handleSuccess);
-  };
-
-  handleSuccess({ status }) {
-    if (status === 'success') { 
-      this.props.successCallback();
-    }
+    context.login(username, password)
   }
 
-  render() {
-    return (
-      <>
-        <When condition={this.context.loggedIn}>
-          <button onClick={this.context.logout}>Log Out</button>
-        </When>
+  return (
+    <div>
+      <When condition={context.loggedIn}>
+        <button onClick={context.logout}>Logout</button>
+      </When>
 
-        <When condition={!this.context.loggedIn}>
-          <form onSubmit={this.handleSubmit}>
-            <input
-              placeholder="UserName"
-              name="username"
-              onChange={this.handleChange}
-            />
-            <input
-              placeholder="password"
-              name="password"
-              onChange={this.handleChange}
-            />
-            <button>Login</button>
-          </form>
-        </When>
-      </>
-    );
-  }
+      <When condition={!context.loggedIn}>
+        <form onSubmit={handleSubmit}>
+          <input type="text" onChange={e => setUsername(e.target.value)}/>
+          <input type="password" onChange={e => setPassword(e.target.value)}/>
+          <button type="submit">Login</button>
+        </form>
+      </When>
+    </div>
+  )
 }
 
 export default Login;
